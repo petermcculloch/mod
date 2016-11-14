@@ -1,3 +1,31 @@
+/**
+*
+*	mod.patcherargs.js - Peter McCulloch, 2016
+*	
+*   Mod.patcherargs.js allows you to reorder the attributes and arguments coming
+*   out of patcherargs by specifying the order that attributes should appear 
+*   relative to arguments.  This can be useful for objects that are configured by 
+*   attributes where the order may be significant.  (For example: creating a buffer of 
+*   a specific length, filling it with content, and then specifying a region to 
+*   read from in it.)
+*
+*   There are four ordering positions any of which may be empty:
+*   1. Pre - Before arguments are processed.  
+*   2. Arguments 
+*   3. Default attributes (attributes for which an order has not been specified)
+*   4. Post - at the very end.
+
+*   For @pre/@post, a list of attribute names is specified (without using @ for the names)
+*   The attributes in each category will be ordered from first to last.  For 
+*   example "@pre A B C" will process attribute A (if any), then attribute B (if any),
+    then attribute C (if any).
+*   
+*	- The "done" message will always appear after everything (including arguments) has been processed.
+*   - If you provide no arguments, the result will be arguments, then attributes because 
+*     there are no @pre attributes specified.
+*
+*/
+
 this.inlets = 2;
 this.outlets = 2;
 
@@ -5,53 +33,69 @@ autowatch = 1;
 
 var kv = {};
 var priorities = {};
-var default_priority = 0;
+var defaultPriority = 1;
+var argumentPriority = 0;
 var ascending = 1; // Higher priority = load later
-var arglist = [];
-var values = []
+var values = [];
 
 var splits = ["@pre","@post"];
 
-function init()
+var findAttributes = function(v)
+{
+	var res = {};
+	var i = 0;
+	var tmp = [];
+	var found = false;
+	var key = null;
+	i = v.length - 1;
+	while (i >= 0) 
+	{
+		if (splits.indexOf(v[i]) >= 0) // Is one of the specified keys
+		{
+			if (tmp.length > 0) {
+				res[v[i].slice(1)] = tmp; // Strip off the @ sign
+			}
+			tmp = [];
+		} else {
+			tmp.unshift(v[i]);
+		}
+		i--;
+	}
+	if (tmp.length > 0) {
+		res.arguments = tmp; // Anything left is the arguments
+	}
+	return res;
+};
+
+function init() 
 {
 	var a = arrayfromargs(jsarguments.slice(1));
-	var i = 0;
-	var preIndex = a.indexOf("@pre");
-	var postIndex = a.indexOf("@post");
-	
-	i = preIndex + 1;
-	var preArray = [];
-	// Record values until split occurs...
-	while (i < a.length && splits.indexOf(a[i]) < 0)
+	var res = findAttributes(a);
+	var priorityCounter = argumentPriority-1;;
+	var v = res["pre"];
+	if (v !== undefined) 
 	{
-		preArray.push(a[i]);
-		i++;
+		while (v.length > 0) 
+		{
+			priorities[v.pop()] = priorityCounter;
+			priorityCounter--;
+		}
 	}
-	
-	
-	// preArray = preArray.reverse();
-	
-	i = 0;
-	var priorityCounter = -preArray.length;
-	var iMax = preArray.length;	
-	while (i < iMax)
+	v = res["post"];
+	if (v !== undefined) 
 	{
-		priorities[preArray[i]] = priorityCounter;
-		priorityCounter++;
-		i++;
-	}
+		priorityCounter = defaultPriority+1; // Order is pre arguments otherAttr post
 		
-	i = postIndex + 1;
-	priorityCounter = 1; // Count up from 1
-	
-	// Record values until split occurs...
-	while (i < a.length && splits.indexOf(a[i]) < 0)
-	{
-		priorities[a[i]] = priorityCounter;
-		i++;
-		priorityCounter++;
+		while (v.length > 0) 
+		{
+			priorities[v.shift()] = priorityCounter;
+			priorityCounter++;
+		}
 	}
 }
+
+
+	
 
 init();
 
@@ -69,9 +113,11 @@ function sortPriority(a,b)
 function anything()
 {
 	var a = arrayfromargs(arguments);
-	var i = inlet;
-	if (i == 0) {
-		arglist = a;
+	var i = 0;
+	if (inlet == 0) {
+		// Store arguments
+		var record = {"key" : "arguments", "val" : a, "priority" : argumentPriority};
+		values.push(record);
 	} else { 
 		if (a.length === 0 && messagename === "done") {
 			// All set, now output
@@ -80,20 +126,27 @@ function anything()
 			var iMax = values.length;
 			for (i = 0; i < iMax; ++i)
 			{
-				outlet(1,values[i].key,values[i].val);
+				if (values[i].key === "arguments") {
+					outlet(0, values[i].val);
+				} else {
+					outlet(1,values[i].key,values[i].val);
+				}
 			}
-			outlet(1,"done");
-			outlet(0,arglist);
+			outlet(1,"done"); // Done always arrives last.
 			values = [];
 		} else {
 			// Store values
-			var p = priorities.hasOwnProperty(messagename) ? priorities[messagename] : default_priority;
+			var p = priorities.hasOwnProperty(messagename) ? priorities[messagename] : defaultPriority;
 			var record = {"key" : messagename, "val" : a, "priority" : p};
 			values.push(record);
 		}
 	}	
 }
 
+var testAttributes = function() {
+	var test = ["@pre","buffer", "@post","samps","channel"];
+	var res = findAttributes(test);
+};
 
-
+testAttributes.local = 1;
 	
