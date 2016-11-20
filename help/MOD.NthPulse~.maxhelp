@@ -212,7 +212,7 @@
 													"outlettype" : [ "" ],
 													"patching_rect" : [ 81.0, 202.0, 187.0, 22.0 ],
 													"style" : "",
-													"text" : "scale 0 100 0.1 1. 1.5 @classic 0"
+													"text" : "scale 0 100 0.1 1. 1.2 @classic 0"
 												}
 
 											}
@@ -1197,7 +1197,6 @@
 													"numinlets" : 1,
 													"numoutlets" : 0,
 													"patching_rect" : [ 187.0, 147.826172, 30.0, 30.0 ],
-													"presentation_rect" : [ 187.0, 147.826172, 0.0, 0.0 ],
 													"style" : ""
 												}
 
@@ -1506,7 +1505,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 184.5, 282.0, 47.0, 22.0 ],
 									"style" : "",
-									"text" : "2 3 4 6"
+									"text" : "5 2 3 2"
 								}
 
 							}
@@ -2616,20 +2615,20 @@
 ,
 		"dependency_cache" : [ 			{
 				"name" : "MOD.NthPulse~.maxpat",
-				"bootpath" : "~/Documents/Max 7/Packages/mod/patchers/pulses",
+				"bootpath" : "~/Documents/Max 7/Packages/mod/patchers/timing",
 				"type" : "JSON",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "mod.patcherargs.js",
-				"bootpath" : "~/Documents/Max 7/Packages/mod/js",
-				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
 				"name" : "mod.nthpulse.gendsp",
 				"bootpath" : "~/Documents/Max 7/Packages/mod/patchers/gen",
 				"type" : "gDSP",
+				"implicit" : 1
+			}
+, 			{
+				"name" : "mod.patcherargs.js",
+				"bootpath" : "~/Documents/Max 7/Packages/mod/js",
+				"type" : "TEXT",
 				"implicit" : 1
 			}
 , 			{
