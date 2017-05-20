@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 100.0, 100.0, 601.0, 479.0 ],
+		"rect" : [ 100.0, 100.0, 794.0, 676.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -54,7 +54,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 0.0, 26.0, 601.0, 453.0 ],
+						"rect" : [ 100.0, 126.0, 794.0, 650.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -859,12 +859,11 @@
 , 											{
 												"box" : 												{
 													"id" : "obj-24",
-													"linecount" : 2,
 													"maxclass" : "message",
 													"numinlets" : 2,
 													"numoutlets" : 1,
 													"outlettype" : [ "" ],
-													"patching_rect" : [ 132.5, 132.0, 128.0, 35.0 ],
+													"patching_rect" : [ 132.5, 132.0, 236.0, 22.0 ],
 													"style" : "",
 													"text" : "gainAll 800., qAll 800, freqRatio 1000 0.6"
 												}
@@ -1060,7 +1059,7 @@
 											"modernui" : 1
 										}
 ,
-										"rect" : [ 0.0, 0.0, 640.0, 480.0 ],
+										"rect" : [ 59.0, 103.0, 640.0, 480.0 ],
 										"bglocked" : 0,
 										"openinpresentation" : 0,
 										"default_fontsize" : 12.0,
@@ -1638,7 +1637,7 @@
 									"outlettype" : [ "" ],
 									"patching_rect" : [ 184.5, 302.0, 47.0, 22.0 ],
 									"style" : "",
-									"text" : "4 3 2 1"
+									"text" : "7 3 2 5"
 								}
 
 							}
@@ -2038,7 +2037,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 100.0, 126.0, 601.0, 453.0 ],
+						"rect" : [ 0.0, 26.0, 794.0, 650.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -2760,8 +2759,8 @@
  ],
 		"lines" : [  ],
 		"parameters" : 		{
-			"obj-7::obj-6" : [ "Volume[1]", "Volume", 0 ],
-			"obj-9::obj-4" : [ "Volume", "Volume", 0 ]
+			"obj-9::obj-4" : [ "Volume", "Volume", 0 ],
+			"obj-7::obj-6" : [ "Volume[1]", "Volume", 0 ]
 		}
 ,
 		"dependency_cache" : [ 			{
