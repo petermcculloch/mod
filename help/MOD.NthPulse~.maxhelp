@@ -9,7 +9,7 @@
 			"modernui" : 1
 		}
 ,
-		"rect" : [ 928.0, 79.0, 794.0, 676.0 ],
+		"rect" : [ 100.0, 100.0, 794.0, 676.0 ],
 		"bglocked" : 0,
 		"openinpresentation" : 0,
 		"default_fontsize" : 12.0,
@@ -54,7 +54,7 @@
 							"modernui" : 1
 						}
 ,
-						"rect" : [ 928.0, 105.0, 794.0, 650.0 ],
+						"rect" : [ 100.0, 126.0, 794.0, 650.0 ],
 						"bglocked" : 0,
 						"openinpresentation" : 0,
 						"default_fontsize" : 12.0,
@@ -1635,7 +1635,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 184.5, 302.0, 47.0, 22.0 ],
+									"patching_rect" : [ 184.5, 302.0, 111.0, 22.0 ],
 									"style" : "",
 									"text" : "4 3 2 1"
 								}
@@ -1735,7 +1735,7 @@
 									"outlettype" : [ "signal", "signal", "", "float", "list" ],
 									"parameter_enable" : 1,
 									"patching_rect" : [ 28.0, 493.0, 208.0, 48.0 ],
-									"presentation_rect" : [ 270.0, 274.0, 50.0, 48.0 ],
+									"presentation_rect" : [ 270.0, 274.0, 50.0, 34.0 ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
 											"parameter_longname" : "Volume",
@@ -1847,6 +1847,7 @@
 									"destination" : [ "obj-17", 1 ],
 									"disabled" : 0,
 									"hidden" : 0,
+									"midpoints" : [ 159.5, 295.0, 286.0, 295.0 ],
 									"source" : [ "obj-13", 0 ]
 								}
 
@@ -2100,7 +2101,7 @@
 									"outlettype" : [ "signal", "signal", "", "float", "list" ],
 									"parameter_enable" : 1,
 									"patching_rect" : [ 54.0, 283.0, 179.0, 48.0 ],
-									"presentation_rect" : [ 387.0, 316.0, 50.0, 48.0 ],
+									"presentation_rect" : [ 387.0, 316.0, 50.0, 34.0 ],
 									"saved_attribute_attributes" : 									{
 										"valueof" : 										{
 											"parameter_longname" : "Volume[1]",
@@ -2759,8 +2760,8 @@
  ],
 		"lines" : [  ],
 		"parameters" : 		{
-			"obj-7::obj-6" : [ "Volume[1]", "Volume", 0 ],
-			"obj-9::obj-4" : [ "Volume", "Volume", 0 ]
+			"obj-9::obj-4" : [ "Volume", "Volume", 0 ],
+			"obj-7::obj-6" : [ "Volume[1]", "Volume", 0 ]
 		}
 ,
 		"dependency_cache" : [ 			{
