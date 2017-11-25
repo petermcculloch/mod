@@ -38,6 +38,34 @@
 		"subpatcher_template" : "",
 		"boxes" : [ 			{
 				"box" : 				{
+					"id" : "obj-5",
+					"linecount" : 3,
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 432.0, 560.5, 220.0, 47.0 ],
+					"presentation_rect" : [ 432.0, 560.5, 0.0, 0.0 ],
+					"style" : "",
+					"text" : "Trigger only on the rising edge of the input.  1 is the default.  If off, sequence will advance on any non-zero sample."
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-22",
+					"maxclass" : "comment",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 332.0, 560.5, 89.0, 20.0 ],
+					"presentation_rect" : [ 332.0, 560.5, 0.0, 0.0 ],
+					"style" : "",
+					"text" : "rising <0/1>",
+					"textjustification" : 2
+				}
+
+			}
+, 			{
+				"box" : 				{
 					"id" : "obj-38",
 					"maxclass" : "newobj",
 					"numinlets" : 1,
@@ -101,8 +129,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 314.5, 304.0, 115.0, 18.0 ],
-									"presentation_rect" : [ 298.5, 280.5, 0.0, 0.0 ],
+									"patching_rect" : [ 164.5, 259.0, 115.0, 18.0 ],
 									"style" : "",
 									"text" : "Refer to external buffer"
 								}
@@ -116,7 +143,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 182.0, 304.0, 110.0, 18.0 ],
+									"patching_rect" : [ 32.0, 259.0, 110.0, 18.0 ],
 									"style" : "",
 									"text" : "Refer to internal buffer"
 								}
@@ -128,8 +155,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 364.5, 128.0, 59.0, 20.0 ],
-									"presentation_rect" : [ 274.5, 131.0, 0.0, 0.0 ],
+									"patching_rect" : [ 214.5, 83.0, 59.0, 20.0 ],
 									"style" : "",
 									"text" : "Other list"
 								}
@@ -141,7 +167,7 @@
 									"maxclass" : "comment",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 207.5, 71.0, 86.0, 20.0 ],
+									"patching_rect" : [ 57.5, 26.0, 86.0, 20.0 ],
 									"style" : "",
 									"text" : "Single int/float"
 								}
@@ -155,7 +181,7 @@
 									"numinlets" : 0,
 									"numoutlets" : 1,
 									"outlettype" : [ "int" ],
-									"patching_rect" : [ 171.5, 66.0, 30.0, 30.0 ],
+									"patching_rect" : [ 21.5, 21.0, 30.0, 30.0 ],
 									"style" : ""
 								}
 
@@ -167,8 +193,8 @@
 									"maxclass" : "inlet",
 									"numinlets" : 0,
 									"numoutlets" : 1,
-									"outlettype" : [ "list" ],
-									"patching_rect" : [ 327.5, 123.0, 30.0, 30.0 ],
+									"outlettype" : [ "" ],
+									"patching_rect" : [ 177.5, 78.0, 30.0, 30.0 ],
 									"style" : ""
 								}
 
@@ -180,7 +206,7 @@
 									"maxclass" : "outlet",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 171.5, 394.0, 30.0, 30.0 ],
+									"patching_rect" : [ 21.5, 349.0, 30.0, 30.0 ],
 									"style" : ""
 								}
 
@@ -192,7 +218,7 @@
 									"maxclass" : "outlet",
 									"numinlets" : 1,
 									"numoutlets" : 0,
-									"patching_rect" : [ 510.5, 394.0, 30.0, 30.0 ],
+									"patching_rect" : [ 392.5, 349.0, 30.0, 30.0 ],
 									"style" : ""
 								}
 
@@ -204,7 +230,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 171.5, 138.0, 81.0, 22.0 ],
+									"patching_rect" : [ 21.5, 93.0, 81.0, 22.0 ],
 									"style" : "",
 									"text" : "vexpr int($f1)"
 								}
@@ -217,7 +243,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 171.5, 111.0, 20.0, 22.0 ],
+									"patching_rect" : [ 21.5, 66.0, 20.0, 22.0 ],
 									"style" : "",
 									"text" : "t l"
 								}
@@ -227,23 +253,24 @@
 								"box" : 								{
 									"id" : "obj-3",
 									"maxclass" : "newobj",
-									"numinlets" : 2,
-									"numoutlets" : 2,
-									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 433.5, 320.0, 96.0, 22.0 ],
+									"numinlets" : 3,
+									"numoutlets" : 3,
+									"outlettype" : [ "", "", "" ],
+									"patching_rect" : [ 283.5, 275.0, 128.0, 22.0 ],
 									"style" : "",
-									"text" : "routepass offset"
+									"text" : "routepass offset rising"
 								}
 
 							}
 , 							{
 								"box" : 								{
 									"id" : "obj-66",
+									"linecount" : 2,
 									"maxclass" : "message",
 									"numinlets" : 2,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 171.5, 324.0, 97.0, 22.0 ],
+									"patching_rect" : [ 21.5, 279.0, 97.0, 35.0 ],
 									"style" : "",
 									"text" : "countbuf #0_buf"
 								}
@@ -256,7 +283,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 171.5, 251.0, 151.0, 22.0 ],
+									"patching_rect" : [ 21.5, 206.0, 151.0, 22.0 ],
 									"style" : "",
 									"text" : "route bang"
 								}
@@ -269,7 +296,7 @@
 									"numinlets" : 1,
 									"numoutlets" : 1,
 									"outlettype" : [ "" ],
-									"patching_rect" : [ 303.5, 324.0, 104.0, 22.0 ],
+									"patching_rect" : [ 153.5, 279.0, 104.0, 22.0 ],
 									"style" : "",
 									"text" : "prepend countbuf"
 								}
@@ -282,7 +309,7 @@
 									"numinlets" : 2,
 									"numoutlets" : 2,
 									"outlettype" : [ "", "" ],
-									"patching_rect" : [ 171.5, 220.0, 281.0, 22.0 ],
+									"patching_rect" : [ 21.5, 175.0, 281.0, 22.0 ],
 									"style" : "",
 									"text" : "route buffer"
 								}
@@ -321,6 +348,15 @@
 									"destination" : [ "obj-33", 0 ],
 									"disabled" : 0,
 									"hidden" : 0,
+									"source" : [ "obj-3", 1 ]
+								}
+
+							}
+, 							{
+								"patchline" : 								{
+									"destination" : [ "obj-33", 0 ],
+									"disabled" : 0,
+									"hidden" : 0,
 									"source" : [ "obj-3", 0 ]
 								}
 
@@ -330,7 +366,7 @@
 									"destination" : [ "obj-34", 0 ],
 									"disabled" : 0,
 									"hidden" : 0,
-									"source" : [ "obj-3", 1 ]
+									"source" : [ "obj-3", 2 ]
 								}
 
 							}
@@ -1718,7 +1754,7 @@
 					"numinlets" : 1,
 					"numoutlets" : 2,
 					"outlettype" : [ "float", "bang" ],
-					"patching_rect" : [ 161.5, 221.0, 181.0, 22.0 ],
+					"patching_rect" : [ 161.5, 221.0, 187.0, 22.0 ],
 					"style" : "",
 					"text" : "buffer~ #0_buf @samps 2048"
 				}
@@ -1745,7 +1781,7 @@
 					"maxclass" : "inlet",
 					"numinlets" : 0,
 					"numoutlets" : 1,
-					"outlettype" : [ "" ],
+					"outlettype" : [ "signal" ],
 					"patching_rect" : [ 13.0, 13.0, 30.0, 30.0 ],
 					"style" : ""
 				}
@@ -1761,7 +1797,7 @@
 					"mode" : 0,
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 327.0, 287.0, 99.0, 280.0 ],
+					"patching_rect" : [ 327.0, 287.0, 100.0, 324.0 ],
 					"proportion" : 0.39,
 					"rounded" : 0,
 					"style" : ""
@@ -1779,7 +1815,7 @@
 					"mode" : 0,
 					"numinlets" : 1,
 					"numoutlets" : 0,
-					"patching_rect" : [ 326.0, 286.0, 332.0, 282.0 ],
+					"patching_rect" : [ 326.0, 286.0, 332.0, 326.0 ],
 					"proportion" : 0.39,
 					"rounded" : 0,
 					"style" : ""
@@ -2000,21 +2036,7 @@
 				}
 
 			}
- ],
-		"dependency_cache" : [ 			{
-				"name" : "mod.nthpulse.gendsp",
-				"bootpath" : "~/Documents/Max 7/Packages/mod/patchers/gen",
-				"type" : "gDSP",
-				"implicit" : 1
-			}
-, 			{
-				"name" : "mod.patcherargs.js",
-				"bootpath" : "~/Documents/Max 7/Packages/mod/js",
-				"type" : "TEXT",
-				"implicit" : 1
-			}
- ],
-		"autosave" : 0
+ ]
 	}
 
 }

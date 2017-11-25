@@ -1,0 +1,210 @@
+{
+	"patcher" : 	{
+		"fileversion" : 1,
+		"appversion" : 		{
+			"major" : 7,
+			"minor" : 3,
+			"revision" : 1,
+			"architecture" : "x86",
+			"modernui" : 1
+		}
+,
+		"rect" : [ 34.0, 78.0, 951.0, 684.0 ],
+		"editing_bgcolor" : [ 0.9, 0.9, 0.9, 1.0 ],
+		"bglocked" : 0,
+		"openinpresentation" : 0,
+		"default_fontsize" : 12.0,
+		"default_fontface" : 0,
+		"default_fontname" : "Arial",
+		"gridonopen" : 1,
+		"gridsize" : [ 15.0, 15.0 ],
+		"gridsnaponopen" : 1,
+		"objectsnaponopen" : 1,
+		"statusbarvisible" : 2,
+		"toolbarvisible" : 1,
+		"lefttoolbarpinned" : 0,
+		"toptoolbarpinned" : 0,
+		"righttoolbarpinned" : 0,
+		"bottomtoolbarpinned" : 0,
+		"toolbars_unpinned_last_save" : 0,
+		"tallnewobj" : 0,
+		"boxanimatetime" : 200,
+		"enablehscroll" : 1,
+		"enablevscroll" : 1,
+		"devicewidth" : 0.0,
+		"description" : "",
+		"digest" : "",
+		"tags" : "",
+		"style" : "",
+		"subpatcher_template" : "",
+		"boxes" : [ 			{
+				"box" : 				{
+					"id" : "obj-9",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 663.0, 14.0, 30.0, 22.0 ],
+					"style" : "",
+					"text" : "in 3"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-8",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 663.0, 599.0, 37.0, 22.0 ],
+					"style" : "",
+					"text" : "out 4"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-7",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 448.666656, 599.0, 37.0, 22.0 ],
+					"style" : "",
+					"text" : "out 3"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-6",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 234.333344, 599.0, 37.0, 22.0 ],
+					"style" : "",
+					"text" : "out 2"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"code" : "Param loop (0); \r\nParam retrig (5);\r\nParam mode (1);   // 0 = retrig, 1 = legato, 2 = wait\r\nParam constant_rate (0);\r\n\r\nHistory ak (0);\r\nHistory dk (0);\r\nHistory akInc (1. / 22050.);\r\nHistory dkInc (1. / 22050.);\r\nHistory atk_dur (22050);\r\nHistory dcy_dur (22050);\r\nHistory lin_atk_coeff (1. / 22050);\r\nHistory lin_dcy_coeff (1. / 22050);\r\nHistory lin_trg_coeff (1. / 220.5);\r\nHistory eoa (0);\r\nHistory eod (1);\r\n\r\nHistory targetX (1.);\r\nHistory x (0);\r\nHistory stage (0);\r\nHistory prev_trig (0);\r\nHistory prev_mode(1);\r\n\r\n\r\n\r\n\r\n\r\natk_dur = max (1, mstosamps (in2));\r\ndcy_dur = max (1, mstosamps (in3));\r\n\r\nlin_atk_coeff = targetX / atk_dur;\r\nlin_dcy_coeff = targetX / dcy_dur;\r\n\r\nif (prev_mode != mode)\r\n{\r\n\takInc = lin_atk_coeff;\r\n\tdkInc = lin_dcy_coeff;\r\n}\r\n\r\n\r\nif ((in1 && (prev_trig == 0) && (stage >= 0)) || (stage == 2) && (loop == 1))\r\n{\r\n    if (mode <= 0)  // Retrigger mode\r\n    {\r\n\t    if (x > 0) \r\n\t    {\r\n\t\t\t// Start from position relative to coefficient\r\n\t\t\tif (stage == 0)\r\n\t\t\t{\r\n\t\t\t\tak = x % lin_atk_coeff; \r\n\t\t\t}\r\n\t\t\telse if (stage == 1)\r\n\t\t\t{\r\n\t\t\t\tdk = x % lin_dcy_coeff;\r\n\t\t\t}\r\n\t\t\t\r\n\t        // Decay at current rate if it's faster than retrig rate (5 ms default)\r\n\t        lin_trg_coeff = max (lin_dcy_coeff, x / max(1, mstosamps (retrig))); \r\n            stage = -1;\r\n\t\t}\r\n      \telse\r\n\t\t{\r\n\t    \tstage = 0;\r\n    \t}\r\n\t\takInc = lin_atk_coeff;\r\n\t\tdkInc = lin_dcy_coeff;\r\n\t}\r\n\telse if (mode <= 1) \r\n\t{\r\n\t\tif (stage == 0)\r\n\t\t{\r\n\t\t\takInc = lin_atk_coeff;\r\n\t\t}\r\n\t\telse if (stage == 1)\r\n\t\t{\r\n\t\t\tak = x;\r\n\t\t\tdk = dk % dkInc;\r\n\t\t\takInc = constant_rate ? akInc : max(0, targetX - x) / atk_dur;\r\n\t\t\tstage = 0;\r\n\t\t}\r\n\t\telse \r\n\t\t{\r\n\t\t\t// Reset stage and coefficient.  (Do not modify ak!)\r\n\t\t\tstage = 0;\r\n\t\t\takInc = lin_atk_coeff;\r\n\t\t}\r\n\t\t\r\n\t\tdkInc = lin_dcy_coeff;\r\n\r\n\t}\r\n\telse  // Wait mode (does not affect looping)\r\n\t{\r\n\t\tif (x <= 0) \r\n\t    {\r\n\t\t\t// Start from position relative to coefficient\r\n\t\t\tif (stage == 0)\r\n\t\t\t{\r\n\t\t\t\tak = x % lin_atk_coeff; \r\n\t\t\t}\r\n\t\t\telse if (stage == 1)\r\n\t\t\t{\r\n\t\t\t\tdk = x % lin_dcy_coeff;\r\n\t\t\t}\r\n\t\t\t\r\n\t        // Decay at current rate if it's faster than retrig rate (5 ms default)\r\n\t        lin_trg_coeff = max (lin_dcy_coeff, x / max(1, mstosamps (retrig))); \r\n            stage = 0;\r\n\t\t} \r\n\t\telse if (!in1 && loop) // If not triggered, but in loop mode...\r\n\t\t{\r\n\t\t\t/*\r\n\t\t\tif (stage == 0)\r\n\t\t\t{\r\n\t\t\t\tak = x % lin_atk_coeff; \r\n\t\t\t}\r\n\t\t\telse if (stage == 1)\r\n\t\t\t{\r\n\t\t\t\tdk = x % lin_dcy_coeff;\r\n\t\t\t}\r\n\t\t\t*/\r\n\t\t\tstage = 0;\r\n\t        \r\n\t\t}\r\n\t\takInc = lin_atk_coeff;\r\n\t\tdkInc = lin_dcy_coeff;\r\n\t}\r\n\t\r\n}\r\n\r\n\r\n\r\n\r\nif (stage < 0)\r\n{\r\n\tx -= lin_trg_coeff;\r\n\tstage += (x <= 0.);\r\n\tx = (x <= 0) ? ak : x;\r\n} \r\nelse if (stage == 0)\r\n{\r\n\tak += akInc;\r\n\tstage += (ak >= targetX); // If over...\r\n\tak = ak % targetX;\r\n\tx = ak;\r\n}\r\nelse if (stage == 1)\r\n{\r\n\tdk += dkInc;\r\n\tstage = stage + (dk >= 1); \r\n\tx = 1 - dk;\r\n\tdk = dk % 1;\r\n}\r\nelse\r\n{\r\n\tx = 0;\r\n\tstage = 2;\r\n}\r\n\r\n\r\n\r\nprev_trig = in1;\r\nprev_mode = mode;\r\n\r\neoa = (stage == 1);\r\neod = (stage  != 1);\r\n\r\nout1 = x;\r\nout2 = stage;\r\nout3 = eoa ; \r\nout4 = eod;  ",
+					"fontface" : 0,
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
+					"id" : "obj-5",
+					"maxclass" : "codebox",
+					"numinlets" : 3,
+					"numoutlets" : 4,
+					"outlettype" : [ "", "", "", "" ],
+					"patching_rect" : [ 20.0, 51.0, 662.0, 531.0 ],
+					"style" : ""
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-1",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 20.0, 14.0, 30.0, 22.0 ],
+					"style" : "",
+					"text" : "in 1"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-2",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 341.5, 14.0, 30.0, 22.0 ],
+					"style" : "",
+					"text" : "in 2"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-4",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 20.0, 599.0, 37.0, 22.0 ],
+					"style" : "",
+					"text" : "out 1"
+				}
+
+			}
+ ],
+		"lines" : [ 			{
+				"patchline" : 				{
+					"destination" : [ "obj-5", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-1", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-5", 1 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-2", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-4", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-5", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-6", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-5", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-7", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-5", 2 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-8", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-5", 3 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-5", 2 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-9", 0 ]
+				}
+
+			}
+ ]
+	}
+
+}

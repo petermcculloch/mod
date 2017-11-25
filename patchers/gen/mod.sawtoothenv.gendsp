@@ -1,0 +1,103 @@
+{
+	"patcher" : 	{
+		"fileversion" : 1,
+		"appversion" : 		{
+			"major" : 7,
+			"minor" : 3,
+			"revision" : 1,
+			"architecture" : "x86",
+			"modernui" : 1
+		}
+,
+		"rect" : [ 59.0, 103.0, 903.0, 729.0 ],
+		"editing_bgcolor" : [ 0.9, 0.9, 0.9, 1.0 ],
+		"bglocked" : 0,
+		"openinpresentation" : 0,
+		"default_fontsize" : 12.0,
+		"default_fontface" : 0,
+		"default_fontname" : "Arial",
+		"gridonopen" : 1,
+		"gridsize" : [ 15.0, 15.0 ],
+		"gridsnaponopen" : 1,
+		"objectsnaponopen" : 1,
+		"statusbarvisible" : 2,
+		"toolbarvisible" : 1,
+		"lefttoolbarpinned" : 0,
+		"toptoolbarpinned" : 0,
+		"righttoolbarpinned" : 0,
+		"bottomtoolbarpinned" : 0,
+		"toolbars_unpinned_last_save" : 0,
+		"tallnewobj" : 0,
+		"boxanimatetime" : 200,
+		"enablehscroll" : 1,
+		"enablevscroll" : 1,
+		"devicewidth" : 0.0,
+		"description" : "",
+		"digest" : "",
+		"tags" : "",
+		"style" : "",
+		"subpatcher_template" : "",
+		"boxes" : [ 			{
+				"box" : 				{
+					"code" : "History x(0);\r\nHistory rising(0);\r\nHistory releasing(0);\r\nHistory stages(3);\r\nHistory a_coeff(0.99);\r\nHistory d_coeff(0.999);\r\nHistory r_coeff(0.99999);\r\nHistory current_stage(9999);\r\nHistory peakamp (1);\r\nParam retrigger_level(0.5);\r\nParam release(400);\r\nParam decay(10);\r\nParam attack(1);\r\nParam attack_var (0.1);\r\nParam decay_var (0.1);\r\n\r\n\r\n/* Constants\r\n *  \r\n *  After 3 iterations of the RC accumulator, the accumulator will be ~95% of the way there.  \r\n *  By aiming for a target that's roughly 5% past, we get there right on time.  \r\n *  (The bottom part of the fraction is the ~95% part)\r\n */\r\nhigh_target = 1./((1.-1./e) + (1.-1./e)/e + (1.-1./e)/(e*e));  // Going up...\r\nlow_target = retrigger_level - (high_target * retrigger_level); // (1.-high_target);                                 // Going down...\r\nretrigger_target = (1 - ((1 - retrigger_level) * high_target));\r\n\r\n\r\nif (in1)\r\n{\r\n\tif (x < 0.) \r\n\t{\t\r\n\t\tpeakamp = abs(in1);\r\n\t}\r\n\r\n\trising = 1;\r\n\tatk = attack * (1 + (attack_var * noise()));\r\n\tdcy = decay  * (1 + (decay_var  * noise()));\r\n\ta_coeff = 1.-(exp(-1. / ((max(mstosamps(atk),1.)/3.))));\r\n\td_coeff = 1.-(exp(-1. / ((max(mstosamps(dcy),3.)/3.))));\r\n\tr_coeff = 1.-(exp(-1. / ((max(mstosamps(release),3.)/3.))));\r\n\r\n\treleasing = 0;\r\n\tcurrent_stage = 0;\r\n}\r\n\r\nx += !releasing * ( (rising * a_coeff * (high_target - x)) \r\n                  + (!rising * d_coeff * (retrigger_target * peakamp - x)));\r\n\r\nrising = ((rising && x < 1) || (!rising && x <= retrigger_level * peakamp) && current_stage < stages);\r\ncurrent_stage += (delta(rising) > 0);\r\nreleasing = current_stage >= stages;\r\n\r\nif (delta(rising) > 0)\r\n{\r\n\tatk = attack * (1 + (attack_var * noise()));\r\n\tdcy = decay  * (1 + (decay_var  * noise()));\r\n\ta_coeff = 1.-(exp(-1. / ((max(mstosamps(atk),1.)/3.))));\r\n\td_coeff = 1.-(exp(-1. / ((max(mstosamps(dcy),3.)/3.))));\r\n\tr_coeff = 1.-(exp(-1. / ((max(mstosamps(release),3.)/3.))));\r\n}\r\n\r\nx += releasing * ( (r_coeff * (low_target - x)));\r\nout1 = max(x, 0) * peakamp;",
+					"fontface" : 0,
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
+					"id" : "obj-5",
+					"maxclass" : "codebox",
+					"numinlets" : 1,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 50.0, 62.0, 735.0, 547.0 ],
+					"style" : ""
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-1",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 50.0, 14.0, 30.0, 22.0 ],
+					"style" : "",
+					"text" : "in 1"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-4",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 50.0, 646.0, 37.0, 22.0 ],
+					"style" : "",
+					"text" : "out 1"
+				}
+
+			}
+ ],
+		"lines" : [ 			{
+				"patchline" : 				{
+					"destination" : [ "obj-5", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-1", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-4", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-5", 0 ]
+				}
+
+			}
+ ]
+	}
+
+}

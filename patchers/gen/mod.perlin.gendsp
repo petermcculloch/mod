@@ -1,0 +1,164 @@
+{
+	"patcher" : 	{
+		"fileversion" : 1,
+		"appversion" : 		{
+			"major" : 7,
+			"minor" : 0,
+			"revision" : 6,
+			"architecture" : "x86",
+			"modernui" : 1
+		}
+,
+		"rect" : [ 56.0, 78.0, 905.0, 555.0 ],
+		"editing_bgcolor" : [ 0.9, 0.9, 0.9, 1.0 ],
+		"bglocked" : 0,
+		"openinpresentation" : 0,
+		"default_fontsize" : 12.0,
+		"default_fontface" : 0,
+		"default_fontname" : "Arial",
+		"gridonopen" : 1,
+		"gridsize" : [ 15.0, 15.0 ],
+		"gridsnaponopen" : 1,
+		"objectsnaponopen" : 1,
+		"statusbarvisible" : 2,
+		"toolbarvisible" : 1,
+		"lefttoolbarpinned" : 0,
+		"toptoolbarpinned" : 0,
+		"righttoolbarpinned" : 0,
+		"bottomtoolbarpinned" : 0,
+		"toolbars_unpinned_last_save" : 0,
+		"tallnewobj" : 0,
+		"boxanimatetime" : 200,
+		"enablehscroll" : 1,
+		"enablevscroll" : 1,
+		"devicewidth" : 0.0,
+		"description" : "",
+		"digest" : "",
+		"tags" : "",
+		"style" : "",
+		"subpatcher_template" : "",
+		"boxes" : [ 			{
+				"box" : 				{
+					"id" : "obj-13",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 645.0, 458.0, 37.0, 22.0 ],
+					"style" : "",
+					"text" : "out 2"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-9",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "" ],
+					"patching_rect" : [ 686.0, 129.0, 97.0, 22.0 ],
+					"style" : "",
+					"text" : "buffer k_buf 256"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-8",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "" ],
+					"patching_rect" : [ 686.0, 83.0, 162.0, 22.0 ],
+					"style" : "",
+					"text" : "buffer persistence_buf 256 2"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-7",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "" ],
+					"patching_rect" : [ 686.0, 40.0, 133.0, 22.0 ],
+					"style" : "",
+					"text" : "buffer coeffs_buf 256 4"
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"code" : "Param octaves(4);\r\nParam persistence(0.5,min=0.00001,max=1.);\r\nHistory prev_persistence(0.5);\r\nHistory last_y(0);\r\nHistory amp_scale(1.);\r\nHistory amp(1.);\r\nHistory amp_total(1.);\r\nkinc = abs(in1)/samplerate; // Always interpolating forwards...\r\n\r\n//if (persistence != prev_persistence) {\r\n\tamp_total = 0.;\r\n\ta = 1.;\r\n\tfor (i=0; i<octaves; i+=1) {\r\n\t\ta = fastpow(persistence,i);\r\n\t\tamp_total += a;\r\n\t\tpoke(persistence_buf,fastpow(2,i),i,0); \t\t  // write freq multipliers\r\n\t\tpoke(persistence_buf,a,i,1); // write weights\r\n\t}\r\n// }\r\n\r\namp_total = maximum(amp_total,1.);\r\n// amp_total = 1./maximum(amp_total,1.);\r\n\r\namp_scale = mix(amp_scale,amp_total,0.001);\r\n\r\np1 = 0;\r\np2 = 0;\r\np3 = 0;\r\np4 = 0;\r\nk = 0;\r\n\r\namp = 1.;\r\ny = 0.;\r\nfor (i=0; i<octaves; i+=1) {\r\n\tmult = peek(persistence_buf,i,0);\r\n\tamp = peek(persistence_buf,i,1);\r\n\tk = peek(k_buf,i,0); // k = phase accumulator...\r\n\tk += mult*kinc;\r\n\t\r\n\tj = i*4;\r\n\t\r\n\tp1 = peek(coeffs_buf, j,0); // read coefficients in...\r\n\tp2 = peek(coeffs_buf, j,1);\r\n\tp3 = peek(coeffs_buf, j,2);\r\n\tp3 = peek(coeffs_buf, j,3);\r\n\r\n\tif (k >= 1) {\r\n\t\t// Shift...\r\n\t\tp1 = p2;\r\n\t\tp2 = p3;\r\n\t\tp3 = last_y;\r\n\t\tp4 = noise();\r\n\t\t\r\n\t\t// ...then update the coefficients\r\n\t\tpoke(coeffs_buf,p4,j,3); \r\n\t\tpoke(coeffs_buf,p3,j,2);\r\n\t\tpoke(coeffs_buf,p2,j,1);\r\n\t\tpoke(coeffs_buf,p1,j,0);\r\n\t\tk = wrap(k,0,1); // k = 0; //  wrap(k,0,1); // should just reset to 0?\r\n\t} \r\n\t\r\n\t\r\n\ty += amp  * interp(k,p1,p2,p3,p4,mode=\"spline\");\r\n\t\r\n\tpoke(k_buf,k,i,0);\r\n}\r\nlast_y = y;\r\nout1 = y / amp_scale;\r\nout2 = amp_scale;",
+					"fontface" : 0,
+					"fontname" : "Arial",
+					"fontsize" : 12.0,
+					"id" : "obj-5",
+					"maxclass" : "codebox",
+					"numinlets" : 1,
+					"numoutlets" : 2,
+					"outlettype" : [ "", "" ],
+					"patching_rect" : [ 50.0, 68.0, 614.0, 374.0 ],
+					"style" : ""
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-1",
+					"maxclass" : "newobj",
+					"numinlets" : 0,
+					"numoutlets" : 1,
+					"outlettype" : [ "" ],
+					"patching_rect" : [ 50.0, 14.0, 259.0, 22.0 ],
+					"style" : "",
+					"text" : "in 1 @default 1. @comment \"Base Frequency\""
+				}
+
+			}
+, 			{
+				"box" : 				{
+					"id" : "obj-4",
+					"maxclass" : "newobj",
+					"numinlets" : 1,
+					"numoutlets" : 0,
+					"patching_rect" : [ 50.0, 453.0, 37.0, 22.0 ],
+					"style" : "",
+					"text" : "out 1"
+				}
+
+			}
+ ],
+		"lines" : [ 			{
+				"patchline" : 				{
+					"destination" : [ "obj-5", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-1", 0 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-13", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-5", 1 ]
+				}
+
+			}
+, 			{
+				"patchline" : 				{
+					"destination" : [ "obj-4", 0 ],
+					"disabled" : 0,
+					"hidden" : 0,
+					"source" : [ "obj-5", 0 ]
+				}
+
+			}
+ ],
+		"embedsnapshot" : 0
+	}
+
+}
