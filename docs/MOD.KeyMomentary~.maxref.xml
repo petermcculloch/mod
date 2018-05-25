@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<?xml-stylesheet href="./c74ref.xsl" type="text/xsl"?>
+<c74object name="MOD.KeyMomentary~">
+	<digest>
+        Outputs signal of 0/1 for keyup/keydown
+    </digest>
+​
+    <!--METADATA-->
+    <metadatalist>
+        <metadata name="author">Peter McCulloch</metadata>
+        <metadata name="tag">MSP</metadata>
+        <metadata name="tag">Interaction</metadata>
+        <metadata name="tag">Toggle</metadata>
+    </metadatalist>
+    <!--INLETS-->
+	<inletlist>
+		<inlet id="0" type="symbol">
+			<digest>Symbol: case-sensitive character for activating momentary switch.</digest>
+			<description>Input should be a single character.</description>  
+		</inlet>
+	</inletlist>
+
+	<!--OUTLETS-->
+	<outletlist>
+		<outlet id="0" type="signal">
+			<digest>Audio signal: 0/1 corresponding to keyup/keydown.</digest>
+		</outlet>
+		<outlet id="1" type="int">
+			<digest>Int: 0/1 corresponding to keyup/keydown.</digest>
+		</outlet>
+	</outletlist>
+	
+	<!--ARGUMENTS-->
+	<objarglist>
+		<objarg name="character" optional="1" type="symbol">
+			<digest>Keyboard character to use.  Default is 0.</digest>
+		</objarg>
+	</objarglist>
+	
+	<!--MESSAGES-->
+	<methodlist>
+		<method name="symbol">
+			<arglist>
+				<arg name="parameter-settings" optional="0" type="symbol" />
+			</arglist>
+			<digest>
+				Function depends on inlet
+			</digest>
+			<description>
+				Numbers can be used instead of signal objects to control pan position. If a <m>signal</m> is also connected to the inlet, <m>float</m> messages will be ignored. Any numbers sent to the left inlet will be ignored.
+			</description>
+		</method>
+	</methodlist>
+	
+	<!--SEEALSO-->
+	<seealsolist>
+		<seealso name="MOD.KeyToggle~"/>
+		<seealso name="MOD.Key~"/>
+	</seealsolist>
+	
+</c74object>
